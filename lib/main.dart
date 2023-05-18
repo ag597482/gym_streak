@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_streak/screens/exersises.dart';
 import 'package:gym_streak/screens/splash.dart';
 
 void main() {
@@ -10,8 +11,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false,      
-         home: SplashScreen());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+        routes: {
+          'list': (context) => SiteAbooutScreen(),
+        });
   }
 }

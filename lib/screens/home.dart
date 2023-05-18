@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gym_streak/screens/profile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -9,52 +8,110 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Profile(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 28, 28, 30),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 73, 71, 71),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded),
-            label: 'Statics',
+      body: Column(children: [
+        Container(
+          alignment: Alignment.center,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                alignment: Alignment.center,
+                child: Image(
+                  image: AssetImage("assets/fire.png"),
+                  width: 160,
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 15),
+                child: Text(
+                  "Hello Aman",
+                  style: TextStyle(color: Colors.white, fontSize: 50),
+                ),
+              ),
+              Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 110),
+                  child: Text(
+                    '10',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 60,
+                    ),
+                  )),
+              Container(
+                alignment: Alignment.bottomCenter,
+                margin: EdgeInsets.only(top: 180),
+                child: Text(
+                  "Day Streak",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
-        onTap: _onItemTapped,
-      ),
+        ),
+        getGridView(context),
+      ]),
     );
   }
+}
+
+getGridView(BuildContext context) {
+  return CustomScrollView(
+    primary: false,
+    shrinkWrap: true,
+    slivers: <Widget>[
+      SliverPadding(
+        padding: const EdgeInsets.all(10),
+        sliver: SliverGrid.count(
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+          crossAxisCount: 3,
+          children: <Widget>[
+            getBodyPartContainer(
+                AssetImage("assets/back.png"), "Back", context),
+            getBodyPartContainer(
+                AssetImage("assets/chest.png"), "Chest", context),
+            getBodyPartContainer(
+                AssetImage("assets/shoulder.png"), "Shoulder", context),
+            getBodyPartContainer(
+                AssetImage("assets/triceps.png"), "Triceps", context),
+            getBodyPartContainer(
+                AssetImage("assets/biceps.png"), "Biceps", context),
+            getBodyPartContainer(AssetImage("assets/leg.png"), "Legs", context),
+            SizedBox(
+              height: 10,
+              width: 10,
+            ),
+            getBodyPartContainer(AssetImage("assets/abs.png"), "Abs", context),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+getBodyPartContainer(AssetImage image, var text, BuildContext context) {
+  return InkWell(
+    onTap: () {
+      Navigator.pushNamed(context, "list");
+    },
+    child: Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.all(Radius.circular(8))),
+      padding: const EdgeInsets.all(6),
+      child: Image(image: image,
+      ),
+    ),
+  );
 }
