@@ -61,10 +61,6 @@ class _ExersisesState extends State<Exersises> {
   }
 
   ListView getExersiseList() {
-    TextStyle textStyle = TextStyle(
-      fontSize: 18,
-      color: Colors.black,
-    );
     return ListView.builder(
         itemCount: count,
         itemBuilder: (BuildContext context, int position) {
@@ -77,7 +73,7 @@ class _ExersisesState extends State<Exersises> {
                 ),
                 title: Text(
                   exersiseList![position].title,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 18,
                       color: Colors.black,
                       fontWeight: FontWeight.bold),
@@ -86,13 +82,11 @@ class _ExersisesState extends State<Exersises> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Total Sets : " +
-                          exersiseList![position].count.toString(),
+                      "Total Sets : ${exersiseList![position].count}",
                       style: TextStyle(fontSize: 13, color: Colors.black),
                     ),
                     Text(
-                      "Last Workout : " +
-                          exersiseList![position].lastWorkoutDate,
+                      "Last Workout : ${exersiseList![position].lastWorkoutDate}",
                       style: TextStyle(fontSize: 10, color: Colors.black),
                     )
                   ],
@@ -137,25 +131,31 @@ class _ExersisesState extends State<Exersises> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("ADD SET"),
-            content: Container(
+            title: const Text("ADD SET"),
+            content: SizedBox(
               height: 144,
               child: Column(
                 children: [
                   TextField(
                     autofocus: true,
                     controller: set1TextController,
-                    decoration: InputDecoration(hintText: 'Enter Set 1 Data'),
+                    keyboardType: TextInputType.number,
+                    decoration:
+                        const InputDecoration(hintText: 'Enter Set 1 Data'),
                   ),
                   TextField(
                     autofocus: true,
                     controller: set2TextController,
-                    decoration: InputDecoration(hintText: 'Enter Set 2 Data'),
+                    keyboardType: TextInputType.number,
+                    decoration:
+                        const InputDecoration(hintText: 'Enter Set 2 Data'),
                   ),
                   TextField(
                     autofocus: true,
                     controller: set3TextController,
-                    decoration: InputDecoration(hintText: 'Enter Set 3 Data'),
+                    keyboardType: TextInputType.number,
+                    decoration:
+                        const InputDecoration(hintText: 'Enter Set 3 Data'),
                   ),
                 ],
               ),
@@ -166,7 +166,7 @@ class _ExersisesState extends State<Exersises> {
                     submitSet(exersise, set1TextController.text,
                         set2TextController.text, set3TextController.text);
                   },
-                  child: Text("Save"))
+                  child: const Text("Save"))
             ],
           );
         });
@@ -179,8 +179,7 @@ class _ExersisesState extends State<Exersises> {
   }
 
   getStatsBox(Exersise exersise) {
-    return Container(
-        child: DataTable(
+    return DataTable(
       columns: const <DataColumn>[
         DataColumn(
           label: Expanded(
@@ -230,23 +229,6 @@ class _ExersisesState extends State<Exersises> {
           ],
         ),
       ],
-    ));
-  }
-
-  getStatsElement(Exersise exersise) {
-    return Container(
-      width: 160,
-      child: Row(
-        children: [
-          Column(children: [Text("Set 1"), Text("100 kg"), Text("50 kg")]),
-          Column(
-            children: [Text("Set 2"), Text("100 kg"), Text("50 kg")],
-          ),
-          Column(
-            children: [Text("Set 3"), Text("100 kg"), Text("50 kg")],
-          ),
-        ],
-      ),
     );
   }
 
@@ -256,9 +238,7 @@ class _ExersisesState extends State<Exersises> {
         exersiseList = value;
         count = value.length;
       });
-
       print("length of exersises list is :");
-
       print(value.length);
     });
     // print("update list caled");
@@ -311,9 +291,6 @@ class _ExersisesState extends State<Exersises> {
     exersise.set1High = max(exersise.set1High, int.parse(s1));
     exersise.set2High = max(exersise.set2High, int.parse(s2));
     exersise.set3High = max(exersise.set3High, int.parse(s3));
-    print(exersise.set1High);
-    print(exersise.set2High);
-    print(exersise.set3High);
     return exersise;
   }
 
@@ -331,19 +308,19 @@ class _ExersisesState extends State<Exersises> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("ADD"),
+            title: const Text("ADD"),
             content: TextField(
               autofocus: true,
               controller: dialogTextController,
               decoration:
-                  InputDecoration(hintText: 'Enter New ' + title + ' Exersise'),
+                  InputDecoration(hintText: 'Enter New $title Exersise'),
             ),
             actions: [
               TextButton(
                   onPressed: () {
                     submit(dialogTextController.text, title);
                   },
-                  child: Text("Save"))
+                  child: const Text("Save"))
             ],
           );
         });

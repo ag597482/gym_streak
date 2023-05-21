@@ -11,12 +11,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // int age = 0;
-  // int? dbAge;
-  // int weight = 0;
-  // int? dbweight;
-  // int height = 0;
-  // int? dbHeight;
+
   TextStyle textStyle = const TextStyle(
       fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600);
   TextEditingController heightController = TextEditingController();
@@ -24,6 +19,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController weightController = TextEditingController();
 
   SharedPreferenceService preferenceService = SharedPreferenceService();
+
   void updateProfile() {
     setState(() {
       preferenceService.getVal("Age").then((value) => gAge = value);
@@ -34,6 +30,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    updateProfile();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 28, 28, 30),
       body: SingleChildScrollView(
@@ -42,26 +39,18 @@ class _ProfileState extends State<Profile> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
-                  children: [
+                  children: const [
                     CircleAvatar(
-                      
                       backgroundColor: Colors.red,
                       maxRadius: 50,
                       backgroundImage: AssetImage("assets/dp.jpeg"),
-                      // Text(
-                      //   "A",
-                      //   style: TextStyle(
-                      //       color: Colors.white,
-                      //       fontWeight: FontWeight.w400,
-                      //       fontSize: 70),
-                      // )
                     ),
                     Text(
                       "Aman",
@@ -72,7 +61,7 @@ class _ProfileState extends State<Profile> {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 60,
                 ),
                 SizedBox(
@@ -82,12 +71,12 @@ class _ProfileState extends State<Profile> {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 50,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       "Pro Member",
                       style: TextStyle(
@@ -95,7 +84,7 @@ class _ProfileState extends State<Profile> {
                           fontSize: 10,
                           fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 60,
                     ),
                     Text(
@@ -151,7 +140,7 @@ class _ProfileState extends State<Profile> {
 getTextView(
     title, value, unit, textStyle, context, preferenceService, updateProfile) {
   return Container(
-    margin: EdgeInsets.only(left: 30, top: 6, right: 30),
+    margin: const EdgeInsets.only(left: 30, top: 6, right: 30),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -165,7 +154,7 @@ getTextView(
             onPressed: () {
               openDialog(title, context, preferenceService, updateProfile);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.edit,
               color: Colors.white,
             ))
@@ -183,6 +172,7 @@ openDialog(title, context, preferenceService, updateProfile) {
           title: Text(title),
           content: TextField(
             autofocus: true,
+            keyboardType: TextInputType.number,
             controller: dialogTextController,
             decoration: InputDecoration(hintText: 'Enter ' + title),
           ),
@@ -192,7 +182,7 @@ openDialog(title, context, preferenceService, updateProfile) {
                   submit(context, dialogTextController.text, preferenceService,
                       title, updateProfile);
                 },
-                child: Text("Save"))
+                child: const Text("Save"))
           ],
         );
       });
