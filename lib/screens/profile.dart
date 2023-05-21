@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_streak/globals.dart';
 
 import '../utils/shared_pref_helper.dart';
 
@@ -10,20 +11,26 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  int age = 0;
-  int? dbAge;
-  int weight = 0;
-  int? dbweight;
-  int height = 0;
-  int? dbHeight;
-  TextStyle textStyle =
-      const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600);
+  // int age = 0;
+  // int? dbAge;
+  // int weight = 0;
+  // int? dbweight;
+  // int height = 0;
+  // int? dbHeight;
+  TextStyle textStyle = const TextStyle(
+      fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600);
   TextEditingController heightController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController weightController = TextEditingController();
 
-
   SharedPreferenceService preferenceService = SharedPreferenceService();
+  void updateProfile() {
+    setState(() {
+      preferenceService.getVal("Age").then((value) => gAge = value);
+      preferenceService.getVal("Height").then((value) => gHeight = value);
+      preferenceService.getVal("Weight").then((value) => gWeight = value);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +51,18 @@ class _ProfileState extends State<Profile> {
                 Column(
                   children: [
                     CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        maxRadius: 50,
-                        child: Text(
-                          "A",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 70),
-                        )),
+                      
+                      backgroundColor: Colors.red,
+                      maxRadius: 50,
+                      backgroundImage: AssetImage("assets/dp.jpeg"),
+                      // Text(
+                      //   "A",
+                      //   style: TextStyle(
+                      //       color: Colors.white,
+                      //       fontWeight: FontWeight.w400,
+                      //       fontSize: 70),
+                      // )
+                    ),
                     Text(
                       "Aman",
                       style: TextStyle(
@@ -113,21 +123,24 @@ class _ProfileState extends State<Profile> {
               endIndent: 5,
               color: Colors.grey,
             ),
-            getTextView("Age", "26", "y/o", textStyle, context),
+            getTextView("Age", gAge.toString(), "y/o", textStyle, context,
+                preferenceService, updateProfile),
             const Divider(
               thickness: 1,
               indent: 20,
               endIndent: 20,
               color: Colors.grey,
             ),
-            getTextView("Height", "176", "cm", textStyle, context),
+            getTextView("Height", gHeight.toString(), "cm", textStyle, context,
+                preferenceService, updateProfile),
             const Divider(
               thickness: 1,
               indent: 20,
               endIndent: 20,
               color: Colors.grey,
             ),
-            getTextView("Weight", "64", "kg", textStyle, context),
+            getTextView("Weight", gWeight.toString(), "kg", textStyle, context,
+                preferenceService, updateProfile),
           ],
         ),
       )),
@@ -135,7 +148,8 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-getTextView(title, value, unit, textStyle, context) {
+getTextView(
+    title, value, unit, textStyle, context, preferenceService, updateProfile) {
   return Container(
     margin: EdgeInsets.only(left: 30, top: 6, right: 30),
     child: Row(
@@ -149,7 +163,7 @@ getTextView(title, value, unit, textStyle, context) {
         IconButton(
             alignment: Alignment.topRight,
             onPressed: () {
-              openDialog(title, context);
+              openDialog(title, context, preferenceService, updateProfile);
             },
             icon: Icon(
               Icons.edit,
@@ -160,7 +174,8 @@ getTextView(title, value, unit, textStyle, context) {
   );
 }
 
-openDialog(title, context) {
+openDialog(title, context, preferenceService, updateProfile) {
+  TextEditingController dialogTextController = TextEditingController();
   return showDialog(
       context: context,
       builder: (context) {
@@ -168,12 +183,14 @@ openDialog(title, context) {
           title: Text(title),
           content: TextField(
             autofocus: true,
+            controller: dialogTextController,
             decoration: InputDecoration(hintText: 'Enter ' + title),
           ),
           actions: [
             TextButton(
                 onPressed: () {
-                  submit(context);
+                  submit(context, dialogTextController.text, preferenceService,
+                      title, updateProfile);
                 },
                 child: Text("Save"))
           ],
@@ -181,6 +198,8 @@ openDialog(title, context) {
       });
 }
 
-void submit(context) {
+void submit(context, text, preferenceService, title, updateProfile) {
   Navigator.of(context).pop();
+  preferenceService.updateVal(title, int.parse(text));
+  updateProfile();
 }
