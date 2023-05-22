@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:gym_streak/models/exersise.dart';
 import 'package:intl/intl.dart';
 
+import '../globals.dart';
 import '../utils/database_helper.dart';
+import '../utils/shared_pref_helper.dart';
 
 class Exersises extends StatefulWidget {
   String title;
@@ -23,6 +25,7 @@ class _ExersisesState extends State<Exersises> {
   List<String> tappedItems = [];
   String title;
   AssetImage assetImage;
+  SharedPreferenceService preferenceService = SharedPreferenceService();
 
   _ExersisesState({required this.title, required this.assetImage});
   @override
@@ -163,8 +166,14 @@ class _ExersisesState extends State<Exersises> {
             actions: [
               TextButton(
                   onPressed: () {
-                    submitSet(exersise, set1TextController.text,
-                        set2TextController.text, set3TextController.text);
+                    if (set1TextController.text.isEmpty ||
+                        set2TextController.text.isEmpty ||
+                        set3TextController.text.isEmpty) {
+                      _showSnackBar(context, 'Invalid Data entered');
+                    } else {
+                      submitSet(exersise, set1TextController.text,
+                          set2TextController.text, set3TextController.text);
+                    }
                   },
                   child: const Text("Save"))
             ],
@@ -261,6 +270,27 @@ class _ExersisesState extends State<Exersises> {
     if (exersise.id != null) {
       // Case 1: Update operation
       print("update is called");
+      preferenceService.getVal("LastWorkoutTime").then((value) {
+        int dtNow = DateTime.now().millisecondsSinceEpoch ~/ 86400000;
+        int dtDiff = dtNow - value;
+        print(dtNow);
+        print(value);
+        setState(() {
+          if (dtDiff == 0) {
+          } else if (dtDiff > 1) {
+            preferenceService.updateVal("Streak", 1);
+            gStreak = 1;
+          } else {
+            preferenceService.getVal("Streak").then((streakDBValue) {
+              preferenceService.updateVal("Streak", streakDBValue + 1);
+              gStreak = streakDBValue + 1;
+            });
+          }
+        });
+      });
+      preferenceService.updateVal(
+          "LastWorkoutTime", DateTime.now().millisecondsSinceEpoch ~/ 86400000);
+
       result = await helper.updateExersise(exersise);
     } else {
       // Case 2: Insert Operation
@@ -291,6 +321,7 @@ class _ExersisesState extends State<Exersises> {
     exersise.set1High = max(exersise.set1High, int.parse(s1));
     exersise.set2High = max(exersise.set2High, int.parse(s2));
     exersise.set3High = max(exersise.set3High, int.parse(s3));
+    exersise.lastWorkoutDate = DateFormat.yMMMd().format(DateTime.now());
     return exersise;
   }
 
@@ -318,12 +349,21 @@ class _ExersisesState extends State<Exersises> {
             actions: [
               TextButton(
                   onPressed: () {
-                    submit(dialogTextController.text, title);
+                    if (dialogTextController.text == null ||
+                        dialogTextController.text.isEmpty) {
+                      _showSnackBar(context, 'Invalid Data entered');
+                    } else
+                      submit(dialogTextController.text, title);
                   },
                   child: const Text("Save"))
             ],
           );
         });
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void submit(text, title) {

@@ -12,26 +12,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // SharedPreferenceService preferenceService = SharedPreferenceService();
+  SharedPreferenceService preferenceService = SharedPreferenceService();
 
-  // void updateStreak() {
-  //   setState(() {
-      
-  //     preferenceService.getVal("Streak").then((value) => gStreak = value);
-  //     preferenceService.getVal("LastWorkoutTime").then((value) {
-  //       int dtNow = DateTime.now().millisecondsSinceEpoch ~/ 86400000;
-  //       int dtDiff = dtNow - value;
-  //       if (dtDiff > 1) {
-  //         preferenceService.updateVal("Streak", 0);
-  //         gStreak = 0;
-  //       }
-  //     });
-  //   });
-  // }
+  void updateStreak() {
+
+      preferenceService.getVal("LastWorkoutTime").then((value) {
+        int dtNow = DateTime.now().millisecondsSinceEpoch ~/ 86400000;
+        int dtDiff = dtNow - value;
+    setState(() {
+        if (dtDiff > 1) {
+          preferenceService.updateVal("Streak", 0);
+          gStreak = 0;
+        } else {
+          preferenceService
+              .getVal("Streak")
+              .then((streakDBValue) => gStreak = streakDBValue);
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // updateStreak();
+    updateStreak();
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 28, 28, 30),
       body: SingleChildScrollView(
@@ -61,7 +65,7 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(top: 110),
                       child: Text(
-                        "1",
+                        gStreak.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w900,
