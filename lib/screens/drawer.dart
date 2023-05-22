@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_streak/screens/home.dart';
 import 'package:gym_streak/screens/profile.dart';
+import 'package:gym_streak/screens/stats.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({super.key});
@@ -11,14 +12,9 @@ class DrawerScreen extends StatefulWidget {
 
 class _DrawerScreenState extends State<DrawerScreen> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    Stats(),
     Profile(),
   ];
 

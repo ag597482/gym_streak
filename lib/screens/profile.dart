@@ -11,7 +11,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   TextStyle textStyle = const TextStyle(
       fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600);
   TextEditingController heightController = TextEditingController();
@@ -188,8 +187,17 @@ openDialog(title, context, preferenceService, updateProfile) {
       });
 }
 
-void submit(context, text, preferenceService, title, updateProfile) {
+void submit(context, String text, preferenceService, title, updateProfile) {
   Navigator.of(context).pop();
+  if (text.isEmpty) {
+    _showSnackBar(context, 'Invalid Data entered');
+    return;
+  }
   preferenceService.updateVal(title, int.parse(text));
   updateProfile();
+}
+
+void _showSnackBar(BuildContext context, String message) {
+  final snackBar = SnackBar(content: Text(message));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
